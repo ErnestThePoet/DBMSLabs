@@ -12,7 +12,9 @@ class Fdr:
         COL_AC_REG_NO: ColumnMeta("acRegNo", Aircraft.COLUMNS[Aircraft.COL_REG_NO].sql_type),
     }
 
-    CREATE_TABLE_EXTRA = f"FOREIGN KEY ({COLUMNS[COL_AC_REG_NO].name}) REFERENCES {Aircraft.TABLE_NAME}({Aircraft.COLUMNS[Aircraft.COL_REG_NO].name})"
+    CREATE_TABLE_EXTRA = join_create_table_extra([
+        generate_foreign_key(COLUMNS, COL_AC_REG_NO, Aircraft, Aircraft.COL_REG_NO)
+    ])
 
     def __init__(self, id: int, ac_reg_no: str):
         self.id = id

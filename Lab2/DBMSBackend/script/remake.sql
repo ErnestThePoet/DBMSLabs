@@ -1,0 +1,1 @@
+DROP DATABASE dbmslab2;CREATE DATABASE dbmslab2;

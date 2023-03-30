@@ -13,15 +13,22 @@ class Flight:
     COL_AC_REG_NO = 5
 
     COLUMNS = {
-        COL_FLIGHT_NBR: ColumnMeta("flightNbr", "VARCHAR(20)", "NOT NULL PRIMARY KEY"),
-        COL_ORIG_ICAO: ColumnMeta("origIcao", "CHAR(4)", "NOT NULL PRIMARY KEY"),
-        COL_DEST_ICAO: ColumnMeta("destIcao", "CHAR(4)", "NOT NULL PRIMARY KEY"),
-        COL_DEP_TIME: ColumnMeta("depTime", "BIGINT", "NOT NULL PRIMARY KEY"),
+        COL_FLIGHT_NBR: ColumnMeta("flightNbr", "VARCHAR(20)", "NOT NULL"),
+        COL_ORIG_ICAO: ColumnMeta("origIcao", "CHAR(4)", "NOT NULL"),
+        COL_DEST_ICAO: ColumnMeta("destIcao", "CHAR(4)", "NOT NULL"),
+        COL_DEP_TIME: ColumnMeta("depTime", "BIGINT", "NOT NULL"),
         COL_ARR_TIME: ColumnMeta("arrTime", "BIGINT"),
         COL_AC_REG_NO: ColumnMeta("acRegNo", Aircraft.COLUMNS[Aircraft.COL_REG_NO].sql_type)
     }
 
-    CREATE_TABLE_EXTRA = f"FOREIGN KEY ({COLUMNS[COL_AC_REG_NO].name}) REFERENCES {Aircraft.TABLE_NAME}({Aircraft.COLUMNS[Aircraft.COL_REG_NO].name})"
+    CREATE_TABLE_EXTRA = join_create_table_extra([
+        generate_composite_primary_key(COLUMNS, [COL_AC_REG_NO, COL_ORIG_ICAO, COL_DEST_ICAO, COL_DEP_TIME]),
+        generate_index(COLUMNS, COL_FLIGHT_NBR),
+        generate_index(COLUMNS, COL_ORIG_ICAO),
+        generate_index(COLUMNS, COL_DEST_ICAO),
+        generate_index(COLUMNS, COL_DEP_TIME),
+        generate_foreign_key(COLUMNS, COL_AC_REG_NO, Aircraft, Aircraft.COL_REG_NO)
+    ])
 
     def __init__(self,
                  flight_nbr: str,

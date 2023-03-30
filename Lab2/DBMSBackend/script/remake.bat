@@ -1,0 +1,1 @@
+mysql -u ecui -p12345678 < remake.sql

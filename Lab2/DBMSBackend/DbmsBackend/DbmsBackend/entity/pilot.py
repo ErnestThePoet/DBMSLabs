@@ -1,5 +1,5 @@
 from .base.entity import *
-from .Airline import Airline
+from .airline import Airline
 
 
 @entity("pilots")
@@ -12,7 +12,9 @@ class Pilot:
         COL_AIRLINE_ICAO: ColumnMeta("airlineIcao", Airline.COLUMNS[Airline.COL_ICAO].sql_type),
     }
 
-    CREATE_TABLE_EXTRA = f"FOREIGN KEY ({COLUMNS[COL_AIRLINE_ICAO].name}) REFERENCES {Airline.TABLE_NAME}({Airline.COLUMNS[Airline.COL_ICAO].name})"
+    CREATE_TABLE_EXTRA = join_create_table_extra([
+        generate_foreign_key(COLUMNS, COL_AIRLINE_ICAO, Airline, Airline.COL_ICAO)
+    ])
 
     def __init__(self, id: int, airline_icao: str):
         self.id = id
