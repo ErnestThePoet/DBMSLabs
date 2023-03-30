@@ -1,8 +1,8 @@
 import json
 
 import mysql.connector
-from DbmsBackend.DbmsBackend.dao.sql_generator import *
-from DbmsBackend.DbmsBackend.entity.entities import *
+from .sql_generator import *
+from ..entity.entities import *
 
 
 class ComprehensiveRepository:
@@ -28,6 +28,3 @@ class ComprehensiveRepository:
 
         self.cursor.execute(generate_create_table(Airport))
         self.cursor.execute(generate_create_table(AirController))
-
-cr=ComprehensiveRepository()
-cr.init_tables()
