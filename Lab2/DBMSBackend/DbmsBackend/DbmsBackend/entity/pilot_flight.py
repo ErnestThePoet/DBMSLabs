@@ -27,8 +27,7 @@ class PilotFlight:
                          f"FOREIGN KEY ({COLUMNS[COL_FLIGHT_ORIG_ICAO].name}) REFERENCES {Flight.TABLE_NAME}({Flight.COLUMNS[Flight.COL_ORIG_ICAO].name})," \
                          f"FOREIGN KEY ({COLUMNS[COL_FLIGHT_DEST_ICAO].name}) REFERENCES {Flight.TABLE_NAME}({Flight.COLUMNS[Flight.COL_DEST_ICAO].name})," \
                          f"FOREIGN KEY ({COLUMNS[COL_FLIGHT_DEP_TIME].name}) REFERENCES {Flight.TABLE_NAME}({Flight.COLUMNS[Flight.COL_DEP_TIME].name})," \
-                         f"FOREIGN KEY ({COLUMNS[COL_PILOT_ID].name}) REFERENCES {Pilot.TABLE_NAME}({Pilot.COLUMNS[Pilot.COL_ID].name})" \
- \
+                         f"FOREIGN KEY ({COLUMNS[COL_PILOT_ID].name}) REFERENCES {Pilot.TABLE_NAME}({Pilot.COLUMNS[Pilot.COL_ID].name})"
     def __init__(self,
                  flight_nbr: str,
                  flight_orig_icao: str,
