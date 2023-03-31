@@ -10,7 +10,7 @@ class Airline:
     COLUMNS = {
         COL_ICAO: ColumnMeta("icao", "CHAR(3)", "NOT NULL PRIMARY KEY"),
         COL_IATA: ColumnMeta("iata", "CHAR(2)"),
-        COL_NAME: ColumnMeta("name", "VARCHAR(20)"),
+        COL_NAME: ColumnMeta("name", "VARCHAR(50)"),
     }
 
     def __init__(self, icao: str, iata: str, name: str):

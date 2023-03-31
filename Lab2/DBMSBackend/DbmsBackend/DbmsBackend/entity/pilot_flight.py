@@ -35,15 +35,13 @@ class PilotFlight:
     ])
 
     def __init__(self,
-                 flight_nbr: str,
-                 flight_orig_icao: str,
-                 flight_dest_icao: str,
-                 flight_dep_time: int,
-                 flight_arr_time: int,
-                 pilot_id: int):
-        self.flight_nbr = flight_nbr
-        self.flight_orig_icao = flight_orig_icao
-        self.flight_dest_icao = flight_dest_icao
-        self.flight_dep_time = flight_dep_time
-        self.flight_arr_time = flight_arr_time
-        self.pilot_id = pilot_id
+                 flightNbr: str,
+                 flightOrigIcao: str,
+                 flightDestIcao: str,
+                 flightDepTime: int,
+                 pilotId: int):
+        self.flightNbr = flightNbr
+        self.flightOrigIcao = flightOrigIcao
+        self.flightDestIcao = flightDestIcao
+        self.flightDepTime = flightDepTime
+        self.pilotId = pilotId

@@ -15,8 +15,8 @@ class Airport:
         COL_NAME: ColumnMeta("name", "VARCHAR(20)")
     }
 
-    def __init__(self, icao: str, iata: str, city_name: str, name: str):
+    def __init__(self, icao: str, iata: str, cityName: str, name: str):
         self.icao = icao
         self.iata = iata
-        self.city_name = city_name
+        self.cityName = cityName
         self.name = name

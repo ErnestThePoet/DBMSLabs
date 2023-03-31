@@ -27,13 +27,13 @@ class Aircraft:
     ])
 
     def __init__(self,
-                 reg_no: str,
-                 ac_type: str,
-                 manufacturer_name: str,
-                 manufacture_time: int,
-                 airline_icao: str):
-        self.reg_no = reg_no
-        self.ac_type = ac_type
-        self.manufacturer_name = manufacturer_name
-        self.manufacture_time = manufacture_time
-        self.airline_icao = airline_icao
+                 regNo: str,
+                 acType: str,
+                 manufacturerName: str,
+                 manufactureTime: int,
+                 airlineIcao: str):
+        self.regNo = regNo
+        self.acType = acType
+        self.manufacturerName = manufacturerName
+        self.manufactureTime = manufactureTime
+        self.airlineIcao = airlineIcao
