@@ -3,6 +3,8 @@ import json
 import mysql.connector
 from .sql_generator import *
 from ..entity.entities import *
+
+
 # from DbmsBackend.DbmsBackend.entity.entities import *
 # from DbmsBackend.DbmsBackend.dao.sql_generator import *
 
@@ -80,18 +82,18 @@ class ComprehensiveRepository:
         self.insert(Fdr(1013, "B-20EZ"))
         self.insert(Fdr(1014, "B-7669"))
 
-        self.insert(Pilot(101, "CCA"))
-        self.insert(Pilot(102, "CCA"))
-        self.insert(Pilot(103, "CCA"))
-        self.insert(Pilot(201, "CES"))
-        self.insert(Pilot(202, "CES"))
-        self.insert(Pilot(203, "CES"))
-        self.insert(Pilot(301, "CSN"))
-        self.insert(Pilot(302, "CSN"))
-        self.insert(Pilot(303, "CSN"))
-        self.insert(Pilot(401, "CDG"))
-        self.insert(Pilot(402, "CDG"))
-        self.insert(Pilot(403, "CDG"))
+        self.insert(Pilot(101, "Pilot A", "CCA"))
+        self.insert(Pilot(102, "Pilot B", "CCA"))
+        self.insert(Pilot(103, "Pilot C", "CCA"))
+        self.insert(Pilot(201, "Pilot D", "CES"))
+        self.insert(Pilot(202, "Pilot E", "CES"))
+        self.insert(Pilot(203, "Pilot F", "CES"))
+        self.insert(Pilot(301, "Pilot G", "CSN"))
+        self.insert(Pilot(302, "Pilot H", "CSN"))
+        self.insert(Pilot(303, "Pilot I", "CSN"))
+        self.insert(Pilot(401, "Pilot J", "CDG"))
+        self.insert(Pilot(402, "Pilot K", "CDG"))
+        self.insert(Pilot(403, "Pilot L", "CDG"))
 
         self.insert(Airport("ZBAA", "PEK", "Beijing", "Capital"))
         self.insert(Airport("ZBAD", "PKX", "Beijing", "Daxing"))
@@ -104,16 +106,16 @@ class ComprehensiveRepository:
         self.insert(Airport("ZYCC", "CGQ", "Changchun", "Longjia"))
         self.insert(Airport("ZYHB", "HRB", "Harbin", "Taiping"))
 
-        self.insert(AirController(11, "ZBAA"))
-        self.insert(AirController(12, "ZBAD"))
-        self.insert(AirController(13, "ZSJN"))
-        self.insert(AirController(14, "ZSQD"))
-        self.insert(AirController(15, "ZSYT"))
-        self.insert(AirController(16, "ZSPD"))
-        self.insert(AirController(17, "ZUCK"))
-        self.insert(AirController(18, "ZYTX"))
-        self.insert(AirController(19, "ZYCC"))
-        self.insert(AirController(20, "ZYHB"))
+        self.insert(AirController(11, "ATC A", "ZBAA"))
+        self.insert(AirController(12, "ATC B", "ZBAD"))
+        self.insert(AirController(13, "ATC C", "ZSJN"))
+        self.insert(AirController(14, "ATC D", "ZSQD"))
+        self.insert(AirController(15, "ATC E", "ZSYT"))
+        self.insert(AirController(16, "ATC F", "ZSPD"))
+        self.insert(AirController(17, "ATC G", "ZUCK"))
+        self.insert(AirController(18, "ATC H", "ZYTX"))
+        self.insert(AirController(19, "ATC I", "ZYCC"))
+        self.insert(AirController(20, "ATC J", "ZYHB"))
 
     def add_flight(self, flight: Flight):
         pass
