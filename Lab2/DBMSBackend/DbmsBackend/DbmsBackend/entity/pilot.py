@@ -5,10 +5,12 @@ from .airline import Airline
 @entity("pilots")
 class Pilot:
     COL_ID = 0
-    COL_AIRLINE_ICAO = 1
+    COL_NAME = 1
+    COL_AIRLINE_ICAO = 2
 
     COLUMNS = {
         COL_ID: ColumnMeta("id", "INT", "NOT NULL PRIMARY KEY"),
+        COL_NAME: ColumnMeta("name", "VARCHAR(30)", "NOT NULL"),
         COL_AIRLINE_ICAO: ColumnMeta("airlineIcao", Airline.COLUMNS[Airline.COL_ICAO].sql_type),
     }
 
@@ -16,6 +18,7 @@ class Pilot:
         generate_foreign_key(COLUMNS, COL_AIRLINE_ICAO, Airline, Airline.COL_ICAO)
     ])
 
-    def __init__(self, id: int, airlineIcao: str):
+    def __init__(self, id: int, name: str, airlineIcao: str):
         self.id = id
+        self.name = name
         self.airlineIcao = airlineIcao

@@ -1,10 +1,10 @@
 import json
 
 import mysql.connector
-# from .sql_generator import *
-# from ..entity.entities import *
-from DbmsBackend.DbmsBackend.entity.entities import *
-from DbmsBackend.DbmsBackend.dao.sql_generator import *
+from .sql_generator import *
+from ..entity.entities import *
+# from DbmsBackend.DbmsBackend.entity.entities import *
+# from DbmsBackend.DbmsBackend.dao.sql_generator import *
 
 
 class ComprehensiveRepository:
@@ -117,9 +117,3 @@ class ComprehensiveRepository:
 
     def add_flight(self, flight: Flight):
         pass
-
-
-try:
-    cr = ComprehensiveRepository()
-except Exception as e:
-    print(e)
