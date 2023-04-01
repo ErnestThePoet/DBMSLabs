@@ -18,7 +18,7 @@ class Pilot:
         generate_foreign_key(COLUMNS, COL_AIRLINE_ICAO, Airline, Airline.COL_ICAO)
     ])
 
-    def __init__(self, id: int, name: str, airlineIcao: str):
+    def __init__(self, id: int, name: str, airline_icao: str):
         self.id = id
         self.name = name
-        self.airlineIcao = airlineIcao
+        self.airlineIcao = airline_icao

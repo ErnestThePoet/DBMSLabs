@@ -31,15 +31,15 @@ class Flight:
     ])
 
     def __init__(self,
-                 flightNbr: str,
-                 origIcao: str,
-                 destIcao: str,
-                 depTime: int,
-                 arrTime: int,
-                 acRegNo: str):
-        self.flightNbr = flightNbr
-        self.origIcao = origIcao
-        self.destIcao = destIcao
-        self.depTime = depTime
-        self.arrTime = arrTime
-        self.acRegNo = acRegNo
+                 flight_nbr: str,
+                 orig_icao: str,
+                 dest_icao: str,
+                 dep_time: int,
+                 arr_time: int,
+                 ac_reg_no: str):
+        self.flightNbr = flight_nbr
+        self.origIcao = orig_icao
+        self.destIcao = dest_icao
+        self.depTime = dep_time
+        self.arrTime = arr_time
+        self.acRegNo = ac_reg_no

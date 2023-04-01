@@ -16,6 +16,6 @@ class Fdr:
         generate_foreign_key(COLUMNS, COL_AC_REG_NO, Aircraft, Aircraft.COL_REG_NO)
     ])
 
-    def __init__(self, id: int, acRegNo: str):
+    def __init__(self, id: int, ac_reg_no: str):
         self.id = id
-        self.acRegNo = acRegNo
+        self.acRegNo = ac_reg_no

@@ -16,15 +16,15 @@ class ComprehensiveService:
         return make_success_msg_response()
 
     def delete_flight(self,
-                      flightNbr: str,
-                      origIcao: str,
-                      destIcao: str,
-                      depTime: int):
+                      flight_nbr: str,
+                      orig_icao: str,
+                      dest_icao: str,
+                      dep_time: int):
         try:
-            self.comprehensive_repository.delete_flight(flightNbr,
-                                                        origIcao,
-                                                        destIcao,
-                                                        depTime)
+            self.comprehensive_repository.delete_flight(flight_nbr,
+                                                        orig_icao,
+                                                        dest_icao,
+                                                        dep_time)
         except Exception as e:
             return make_success_msg_response(str(e))
 

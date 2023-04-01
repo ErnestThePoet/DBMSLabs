@@ -126,15 +126,15 @@ class ComprehensiveRepository:
             flight.flightNbr, flight.origIcao, flight.destIcao, flight.depTime, pilot_id))
 
     def delete_flight(self,
-                      flightNbr: str,
-                      origIcao: str,
-                      destIcao: str,
-                      depTime: int):
+                      flight_nbr: str,
+                      orig_icao: str,
+                      dest_icao: str,
+                      dep_time: int):
         self._exec_sql_commit(f"DELETE FROM {Flight.TABLE_NAME} WHERE "
-                              f"{Flight.COLUMNS[Flight.COL_FLIGHT_NBR].name}='{flightNbr}' AND "
-                              f"{Flight.COLUMNS[Flight.COL_ORIG_ICAO].name}='{origIcao}' AND "
-                              f"{Flight.COLUMNS[Flight.COL_DEST_ICAO].name}='{destIcao}' AND "
-                              f"{Flight.COLUMNS[Flight.COL_DEP_TIME].name}={depTime};"
+                              f"{Flight.COLUMNS[Flight.COL_FLIGHT_NBR].name}='{flight_nbr}' AND "
+                              f"{Flight.COLUMNS[Flight.COL_ORIG_ICAO].name}='{orig_icao}' AND "
+                              f"{Flight.COLUMNS[Flight.COL_DEST_ICAO].name}='{dest_icao}' AND "
+                              f"{Flight.COLUMNS[Flight.COL_DEP_TIME].name}={dep_time};"
                               )
 
     def get_all_flight_info(self):

@@ -14,7 +14,7 @@ class AirController:
         COL_AIRPORT_ICAO: ColumnMeta("airportIcao", Airport.COLUMNS[Airport.COL_ICAO].sql_type)
     }
 
-    def __init__(self, id: int, name: str, airportIcao: str):
+    def __init__(self, id: int, name: str, airport_icao: str):
         self.id = id
         self.name = name
-        self.airportIcao = airportIcao
+        self.airportIcao = airport_icao
