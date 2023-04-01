@@ -15,7 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from .controller.comprehensive_controller import ComprehensiveController
+
+comprehensive_controller=ComprehensiveController()
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('api/add_flight', comprehensive_controller.add_flight),
+    path('api/delete_flight', comprehensive_controller.delete_flight),
+    path('api/get_all_flight_info', comprehensive_controller.get_all_flight_info),
+    path('api/get_air_controller_by_flight_nbr', comprehensive_controller.get_air_controller_by_flight_nbr),
+    path('api/get_all_airline_flight_count', comprehensive_controller.get_all_airline_flight_count),
 ]
