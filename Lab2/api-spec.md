@@ -1,9 +1,14 @@
-#### 注册账号接口
+#### 添加航班
 * 请求方法：POST
 * 请求参数：
 {
-    account:string;
-    hash1Base64:string;
+    flightNbr:string;
+    origIcao:string;
+    destIcao:string;
+    depTime:number;
+    arrTime:number;
+    acRegNo:string;
+    pilotId:string;
 }
 * 返回类型：json
 * 返回格式：
@@ -12,34 +17,73 @@
 	msg:string;
 }
 
-#### 认证接口
-* 请求方法：PUT
+#### 删除航班
+* 请求方法：DELETE
 * 请求参数：
 {
-    account:string;
-    hash2Base64:string;
-    clientAuthCodeBase64:string;
+    flightNbr:string;
+    origIcao:string;
+    destIcao:string;
+    depTime:number;
 }
 * 返回类型：json
 * 返回格式：
 {
 	success:boolean;
 	msg:string;
-    serverAuthCodeEncryptedBase64?:string;
 }
 
-#### 修改密码接口
-* 请求方法：PUT
+#### 获取所有航班信息
+* 请求方法：GET
+* 请求参数：
+{}
+* 返回类型：json
+* 返回格式：
+{
+	success:boolean;
+	msg:string;
+    flights?:Array<{
+        flightNbr:string;
+        origIcao:string;
+        destIcao:string;
+        depTime:number;
+        arrTime:number;
+        regNo:string;
+        acType:string;
+        pilotIds:string;
+        pilotNames:string;
+    }>;
+}
+
+#### 获取航班管制员信息
+* 请求方法：GET
 * 请求参数：
 {
-    account:string;
-    hash2Base64:string;
-    clientAuthCodeBase64:string;
-    newHash1Base64:string;
+    flightNbr: string;
 }
 * 返回类型：json
 * 返回格式：
 {
 	success:boolean;
 	msg:string;
+    airControllers?:Array<{
+        id:number;
+        name:string;
+        airportIcao:string;
+    }>;
+}
+
+#### 获取各航司航班数量
+* 请求方法：GET
+* 请求参数：
+{}
+* 返回类型：json
+* 返回格式：
+{
+	success:boolean;
+	msg:string;
+    flightCounts?:Array<{
+        icao:string;
+        flightCount:number;
+    }>;
 }

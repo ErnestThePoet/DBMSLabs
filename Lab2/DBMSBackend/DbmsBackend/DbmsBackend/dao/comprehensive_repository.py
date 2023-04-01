@@ -1,12 +1,10 @@
-import json
-
 import mysql.connector
-# from .sql_generator import *
-# from ..entity.entities import *
+from .sql_generator import *
+from ..entity.entities import *
 
 
-from DbmsBackend.DbmsBackend.entity.entities import *
-from DbmsBackend.DbmsBackend.dao.sql_generator import *
+# from DbmsBackend.DbmsBackend.entity.entities import *
+# from DbmsBackend.DbmsBackend.dao.sql_generator import *
 
 
 class ComprehensiveRepository:
@@ -181,7 +179,8 @@ class ComprehensiveRepository:
         property_names = [
             *flight_column_names,
             *aircraft_column_names,
-            *pilot_column_names
+            "pilotIds",
+            "pilotNames",
         ]
         tuples = self.cursor.fetchall()
         results = []
