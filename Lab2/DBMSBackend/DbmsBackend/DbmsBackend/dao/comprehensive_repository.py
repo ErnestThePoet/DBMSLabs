@@ -28,24 +28,30 @@ class ComprehensiveRepository:
         self.cursor.execute(sql)
         self.database.commit()
 
-    def create_table(self, entity_class):
+    def _create_table(self, entity_class):
         self._exec_sql_commit(generate_create_table_sql(entity_class))
 
     def insert(self, entity):
         self._exec_sql_commit(generate_insert_sql(entity))
 
     def _create_tables(self):
-        self.create_table(AcManufacturer)
-        self.create_table(Airline)
-        self.create_table(Aircraft)
-        self.create_table(Fdr)
+        self._create_table(AcManufacturer)
+        self._create_table(Airline)
+        self._create_table(Aircraft)
+        self._create_table(Fdr)
 
-        self.create_table(Flight)
-        self.create_table(Pilot)
-        self.create_table(PilotFlight)
+        self._create_table(Flight)
+        self._create_table(Pilot)
+        self._create_table(PilotFlight)
 
-        self.create_table(Airport)
-        self.create_table(AirController)
+        self._create_table(Airport)
+        self._create_table(AirController)
+        self._exec_sql_commit(f"CREATE VIEW v_aircraft_flights AS "
+                              f"SELECT AC.{Aircraft.COLUMNS[Aircraft.COL_AIRLINE_ICAO].name},FLT.{Flight.COLUMNS[Flight.COL_FLIGHT_NBR].name} "
+                              f"FROM {Flight.TABLE_NAME} AS FLT "
+                              f"INNER JOIN {Aircraft.TABLE_NAME} AS AC "
+                              f"ON FLT.{Flight.COLUMNS[Flight.COL_AC_REG_NO].name}=AC.{Aircraft.COLUMNS[Aircraft.COL_REG_NO].name} "
+                              )
 
     def _init_tables(self):
         self.insert(AcManufacturer("Airbus"))
@@ -217,13 +223,11 @@ class ComprehensiveRepository:
 
         return results
 
-    def get_all_airline_flight_count(self):
-        self._exec_sql(f"SELECT AC.{Aircraft.COLUMNS[Aircraft.COL_AIRLINE_ICAO].name},COUNT(1) "
-                       f"FROM {Flight.TABLE_NAME} AS FLT "
-                       f"INNER JOIN {Aircraft.TABLE_NAME} "
-                       f"ON FLT.{Flight.COLUMNS[Flight.COL_AC_REG_NO].name}=AC.{Aircraft.COLUMNS[Aircraft.COL_REG_NO].name} "
-                       f"GROUP BY AC.{Aircraft.COLUMNS[Aircraft.COL_AIRLINE_ICAO].name};")
+    def get_all_airline_flight_count(self, min_count: int):
+        self._exec_sql(f"SELECT {Aircraft.COLUMNS[Aircraft.COL_AIRLINE_ICAO].name},COUNT(1) "
+                       f"FROM v_aircraft_flights "
+                       f"GROUP BY {Aircraft.COLUMNS[Aircraft.COL_AIRLINE_ICAO].name} "
+                       f"HAVING COUNT(1)>={min_count};")
 
         tuples = self.cursor.fetchall()
         return [{"icao": x[0], "flightCount": x[1]} for x in tuples]
-

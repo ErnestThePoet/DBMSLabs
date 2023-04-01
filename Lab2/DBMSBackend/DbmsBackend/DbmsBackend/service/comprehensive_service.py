@@ -48,9 +48,9 @@ class ComprehensiveService:
         except Exception as e:
             return make_success_msg_response(str(e))
 
-    def get_all_airline_flight_count(self):
+    def get_all_airline_flight_count(self, min_count: int):
         try:
             return make_get_all_airline_flight_count_response(
-                self.comprehensive_repository.get_all_airline_flight_count())
+                self.comprehensive_repository.get_all_airline_flight_count(min_count))
         except Exception as e:
             return make_success_msg_response(str(e))

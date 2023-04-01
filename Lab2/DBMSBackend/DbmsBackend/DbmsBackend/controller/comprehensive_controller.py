@@ -55,4 +55,6 @@ class ComprehensiveController:
     def get_all_airline_flight_count(self, request):
         if PRINT_REQUEST:
             print("get_all_airline_flight_count", request.GET)
-        return JsonResponse(self.comprehensive_service.get_all_airline_flight_count())
+        return JsonResponse(self.comprehensive_service.get_all_airline_flight_count(
+            request.GET["minCount"]
+        ))
