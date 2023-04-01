@@ -2,13 +2,13 @@
 * 请求方法：POST
 * 请求参数：
 {
-    flightNbr:string;
-    origIcao:string;
-    destIcao:string;
-    depTime:number;
-    arrTime:number;
-    acRegNo:string;
-    pilotId:string;
+    flightNbr:string|null;
+    origIcao:string|null;
+    destIcao:string|null;
+    depTime:number|null;
+    arrTime:number|null;
+    acRegNo:string|null;
+    pilotId:string|null;
 }
 * 返回类型：json
 * 返回格式：
