@@ -13,12 +13,12 @@ class PilotFlight:
     COL_PILOT_ID = 4
 
     COLUMNS = {
-        COL_FLIGHT_NBR: ColumnMeta("flightNbr", Flight.COLUMNS[Flight.COL_FLIGHT_NBR].sql_type, "NOT NULL"),
-        COL_FLIGHT_ORIG_ICAO: ColumnMeta("flightOrigIcao", Flight.COLUMNS[Flight.COL_ORIG_ICAO].sql_type,
+        COL_FLIGHT_NBR: ColumnMeta(Flight.COLUMNS[Flight.COL_FLIGHT_NBR].name, Flight.COLUMNS[Flight.COL_FLIGHT_NBR].sql_type, "NOT NULL"),
+        COL_FLIGHT_ORIG_ICAO: ColumnMeta(Flight.COLUMNS[Flight.COL_ORIG_ICAO].name, Flight.COLUMNS[Flight.COL_ORIG_ICAO].sql_type,
                                          "NOT NULL"),
-        COL_FLIGHT_DEST_ICAO: ColumnMeta("flightDestIcao", Flight.COLUMNS[Flight.COL_DEST_ICAO].sql_type,
+        COL_FLIGHT_DEST_ICAO: ColumnMeta(Flight.COLUMNS[Flight.COL_DEST_ICAO].name, Flight.COLUMNS[Flight.COL_DEST_ICAO].sql_type,
                                          "NOT NULL"),
-        COL_FLIGHT_DEP_TIME: ColumnMeta("flightDepTime", Flight.COLUMNS[Flight.COL_DEP_TIME].sql_type,
+        COL_FLIGHT_DEP_TIME: ColumnMeta(Flight.COLUMNS[Flight.COL_DEP_TIME].name, Flight.COLUMNS[Flight.COL_DEP_TIME].sql_type,
                                         "NOT NULL"),
         COL_PILOT_ID: ColumnMeta("pilotId", Pilot.COLUMNS[Pilot.COL_ID].sql_type, "NOT NULL")
     }
@@ -36,12 +36,12 @@ class PilotFlight:
 
     def __init__(self,
                  flightNbr: str,
-                 flightOrigIcao: str,
-                 flightDestIcao: str,
-                 flightDepTime: int,
+                 origIcao: str,
+                 destIcao: str,
+                 depTime: int,
                  pilotId: int):
         self.flightNbr = flightNbr
-        self.flightOrigIcao = flightOrigIcao
-        self.flightDestIcao = flightDestIcao
-        self.flightDepTime = flightDepTime
+        self.origIcao = origIcao
+        self.destIcao = destIcao
+        self.depTime = depTime
         self.pilotId = pilotId

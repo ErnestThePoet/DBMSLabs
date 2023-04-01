@@ -1,12 +1,12 @@
 import json
 
 import mysql.connector
-from .sql_generator import *
-from ..entity.entities import *
+# from .sql_generator import *
+# from ..entity.entities import *
 
 
-# from DbmsBackend.DbmsBackend.entity.entities import *
-# from DbmsBackend.DbmsBackend.dao.sql_generator import *
+from DbmsBackend.DbmsBackend.entity.entities import *
+from DbmsBackend.DbmsBackend.dao.sql_generator import *
 
 
 class ComprehensiveRepository:
@@ -22,13 +22,18 @@ class ComprehensiveRepository:
         self._create_tables()
         self._init_tables()
 
-    def create_table(self, entity_class):
-        self.cursor.execute(generate_create_table_sql(entity_class))
+    def _exec_sql(self, sql: str):
+        self.cursor.execute(sql)
+
+    def _exec_sql_commit(self, sql: str):
+        self.cursor.execute(sql)
         self.database.commit()
 
+    def create_table(self, entity_class):
+        self._exec_sql_commit(generate_create_table_sql(entity_class))
+
     def insert(self, entity):
-        self.cursor.execute(generate_insert_sql(entity))
-        self.database.commit()
+        self._exec_sql_commit(generate_insert_sql(entity))
 
     def _create_tables(self):
         self.create_table(AcManufacturer)
@@ -117,5 +122,108 @@ class ComprehensiveRepository:
         self.insert(AirController(19, "ATC I", "ZYCC"))
         self.insert(AirController(20, "ATC J", "ZYHB"))
 
-    def add_flight(self, flight: Flight):
-        pass
+    def add_flight(self, flight: Flight, pilot_id: int):
+        self.insert(flight)
+        self.insert(PilotFlight(
+            flight.flightNbr, flight.origIcao, flight.destIcao, flight.depTime, pilot_id))
+
+    def delete_flight(self,
+                      flightNbr: str,
+                      origIcao: str,
+                      destIcao: str,
+                      depTime: int):
+        self._exec_sql_commit(f"DELETE FROM {Flight.TABLE_NAME} WHERE "
+                              f"{Flight.COLUMNS[Flight.COL_FLIGHT_NBR].name}='{flightNbr}' AND "
+                              f"{Flight.COLUMNS[Flight.COL_ORIG_ICAO].name}='{origIcao}' AND "
+                              f"{Flight.COLUMNS[Flight.COL_DEST_ICAO].name}='{destIcao}' AND "
+                              f"{Flight.COLUMNS[Flight.COL_DEP_TIME].name}={depTime};"
+                              )
+
+    def get_all_flight_info(self):
+        flight_column_names = [
+            Flight.COLUMNS[Flight.COL_FLIGHT_NBR].name,
+            Flight.COLUMNS[Flight.COL_ORIG_ICAO].name,
+            Flight.COLUMNS[Flight.COL_DEST_ICAO].name,
+            Flight.COLUMNS[Flight.COL_DEP_TIME].name,
+            Flight.COLUMNS[Flight.COL_ARR_TIME].name
+        ]
+
+        aircraft_column_names = [
+            Aircraft.COLUMNS[Aircraft.COL_REG_NO].name,
+            Aircraft.COLUMNS[Aircraft.COL_AC_TYPE].name
+        ]
+
+        pilot_column_names = [
+            Pilot.COLUMNS[Pilot.COL_ID].name,
+            Pilot.COLUMNS[Pilot.COL_NAME].name
+        ]
+
+        group_by_column_names = [
+            Flight.COLUMNS[Flight.COL_FLIGHT_NBR].name,
+            Flight.COLUMNS[Flight.COL_ORIG_ICAO].name,
+            Flight.COLUMNS[Flight.COL_DEST_ICAO].name,
+            Flight.COLUMNS[Flight.COL_DEP_TIME].name
+        ]
+
+        concat_separator = "' '"
+
+        self._exec_sql(f"SELECT {','.join(['FLT.' + x for x in flight_column_names])},"
+                       f"{','.join(['AC.' + x for x in aircraft_column_names])},"
+                       f"{','.join([f'GROUP_CONCAT(PILOT.{x} SEPARATOR {concat_separator})' for x in pilot_column_names])} "
+                       f"FROM {Flight.TABLE_NAME} AS FLT "
+                       f"INNER JOIN {Aircraft.TABLE_NAME} AS AC "
+                       f"ON FLT.{Flight.COLUMNS[Flight.COL_AC_REG_NO].name}=AC.{Aircraft.COLUMNS[Aircraft.COL_REG_NO].name} "
+                       f"NATURAL JOIN {PilotFlight.TABLE_NAME} AS PF "
+                       f"INNER JOIN {Pilot.TABLE_NAME} AS PILOT "
+                       f"ON PF.{PilotFlight.COLUMNS[PilotFlight.COL_PILOT_ID].name}=PILOT.{Pilot.COLUMNS[Pilot.COL_ID].name} "
+                       f"GROUP BY {','.join(['FLT.' + x for x in group_by_column_names])};")
+
+        property_names = [
+            *flight_column_names,
+            *aircraft_column_names,
+            *pilot_column_names
+        ]
+        tuples = self.cursor.fetchall()
+        results = []
+
+        for current_tuple in tuples:
+            current_result = {}
+            for i in range(len(property_names)):
+                current_result[property_names[i]] = current_tuple[i]
+            results.append(current_result)
+
+        return results
+
+    def get_air_controller_by_flight_nbr(self, flight_nbr: str):
+        property_names = [AirController.COLUMNS[x].name for x in Flight.COLUMNS]
+        self._exec_sql(f"SELECT {','.join(['ATC.' + AirController.COLUMNS[x].name for x in Flight.COLUMNS])} "
+                       f"FROM {AirController.TABLE_NAME} AS ATC "
+                       f"WHERE EXISTS("
+                       f"SELECT 1 FROM {Flight.TABLE_NAME} AS FLT "
+                       f"WHERE FLT.{Flight.COLUMNS[Flight.COL_FLIGHT_NBR].name}='{flight_nbr}' AND ("
+                       f"FLT.{Flight.COLUMNS[Flight.COL_ORIG_ICAO].name}="
+                       f"ATC.{AirController.COLUMNS[AirController.COL_AIRPORT_ICAO].name} OR "
+                       f"FLT.{Flight.COLUMNS[Flight.COLUMNS[Flight.COL_DEST_ICAO].name]}="
+                       f"ATC.{AirController.COLUMNS[AirController.COL_AIRPORT_ICAO]}));")
+
+        tuples = self.cursor.fetchall()
+        results = []
+
+        for current_tuple in tuples:
+            current_result = {}
+            for i in range(len(property_names)):
+                current_result[property_names[i]] = current_tuple[i]
+            results.append(current_result)
+
+        return results
+
+    def get_all_airline_flight_count(self):
+        self._exec_sql(f"SELECT AC.{Aircraft.COLUMNS[Aircraft.COL_AIRLINE_ICAO].name},COUNT(1) "
+                       f"FROM {Flight.TABLE_NAME} AS FLT "
+                       f"INNER JOIN {Aircraft.TABLE_NAME} "
+                       f"ON FLT.{Flight.COLUMNS[Flight.COL_AC_REG_NO].name}=AC.{Aircraft.COLUMNS[Aircraft.COL_REG_NO].name} "
+                       f"GROUP BY AC.{Aircraft.COLUMNS[Aircraft.COL_AIRLINE_ICAO].name};")
+
+        tuples = self.cursor.fetchall()
+        return [{"icao": x[0], "flightCount": x[1]} for x in tuples]
+
