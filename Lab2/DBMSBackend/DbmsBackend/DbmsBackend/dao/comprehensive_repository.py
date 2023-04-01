@@ -18,7 +18,8 @@ class ComprehensiveRepository:
         self.cursor = self.database.cursor()
 
         self._create_tables()
-        self._init_tables()
+        # Run for the first start only
+        # self._init_tables()
 
     def _exec_sql(self, sql: str):
         self.cursor.execute(sql)
