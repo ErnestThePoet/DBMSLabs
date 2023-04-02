@@ -15,6 +15,10 @@ class AirlineStats {
     setFlightCounts(flightCounts: SingleAirlineFlightCount[]) {
         this.flightCounts = flightCounts;
     }
+
+    clearFlightCounts() {
+        this.flightCounts = [];
+    }
 }
 
 const airlineStats = new AirlineStats();

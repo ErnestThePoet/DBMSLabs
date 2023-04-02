@@ -1,5 +1,6 @@
 import type { AppProps } from "next/app";
-import React, { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useState, useEffect } from "react";
 import { Layout, Menu } from "antd";
 import "antd/dist/reset.css";
 import { ItemType } from "antd/es/menu/hooks/useItems";
@@ -16,7 +17,21 @@ const menuItems: ItemType[] = ["航班查询", "管制员查询", "航司统计"
 );
 
 export default function App({ Component, pageProps }: AppProps) {
-    const [selectedMenuKey, setselectedMenuKey] = useState<string>("0");
+    const router = useRouter();
+
+    const [selectedMenuKey, setSelectedMenuKey] = useState("0");
+
+    useEffect(() => {
+        if (router.isReady) {
+            if (router.route.startsWith("/flights")) {
+                setSelectedMenuKey("0");
+            } else if (router.route.startsWith("/atc_query")) {
+                setSelectedMenuKey("1");
+            } else if (router.route.startsWith("/airline_stats")) {
+                setSelectedMenuKey("2");
+            }
+        }
+    }, [router.isReady, router.route]);
 
     return (
         <>
@@ -37,10 +52,9 @@ export default function App({ Component, pageProps }: AppProps) {
                     <Menu
                         theme="dark"
                         mode="horizontal"
-                        defaultSelectedKeys={[selectedMenuKey]}
+                        selectedKeys={[selectedMenuKey]}
                         items={menuItems}
                         onClick={e => {
-                            setselectedMenuKey(e.key);
                             L.routerJump(e.key);
                         }}
                     />

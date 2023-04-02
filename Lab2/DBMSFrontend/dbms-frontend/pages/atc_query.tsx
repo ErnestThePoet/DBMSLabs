@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import stylesCommon from "@/styles/common.module.scss";
 import { Space, Table, Button, Spin, Input } from "antd";
 
@@ -32,6 +32,10 @@ const columns: ColumnsType<SingleAtc> = [
 ];
 
 const AtcQueryPage: React.FC = observer(() => {
+    useEffect(() => {
+        atcs.clearAtcs();
+    },[]);
+
     const [isAtcLoading, setIsAtcLoading] = useState(false);
 
     const [flightNumber, setFlightNumber] = useState("");

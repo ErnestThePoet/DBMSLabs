@@ -22,6 +22,10 @@ class Flights {
     setFlights(flights: SingleFlight[]) {
         this.flights = flights;
     }
+
+    clearFlights() {
+        this.flights = [];
+    }
 }
 
 const flights = new Flights();

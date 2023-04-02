@@ -1,5 +1,5 @@
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import stylesCommon from "@/styles/common.module.scss";
 import { Space, Table, Button, Spin, InputNumber } from "antd";
 
@@ -26,6 +26,10 @@ const columns: ColumnsType<SingleAirlineFlightCount> = [
 ];
 
 const AirlineStatsPage: React.FC = observer(() => {
+    useEffect(() => {
+        airlineStats.clearFlightCounts();
+    },[]);
+    
     const [isAtcLoading, setIsAtcLoading] = useState(false);
 
     const [minFlightCount, setMinFlightCount] = useState(2);

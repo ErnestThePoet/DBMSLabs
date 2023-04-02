@@ -16,6 +16,10 @@ class Atcs {
     setAtcs(atcs: SingleAtc[]) {
         this.atcs = atcs;
     }
+
+    clearAtcs() {
+        this.atcs = [];
+    }
 }
 
 const atcs = new Atcs();
