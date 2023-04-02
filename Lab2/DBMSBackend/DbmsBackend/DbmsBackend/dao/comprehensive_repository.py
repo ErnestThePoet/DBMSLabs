@@ -134,8 +134,13 @@ class ComprehensiveRepository:
 
     def add_flight(self, flight: Flight, pilot_id: int):
         self.insert(flight)
-        self.insert(PilotFlight(
-            flight.flightNbr, flight.origIcao, flight.destIcao, flight.depTime, pilot_id))
+
+        try:
+            self.insert(PilotFlight(
+                flight.flightNbr, flight.origIcao, flight.destIcao, flight.depTime, pilot_id))
+        except Exception as e:
+            self.delete_flight(flight.flightNbr, flight.origIcao, flight.destIcao, flight.depTime)
+            raise e
 
     def delete_flight(self,
                       flight_nbr: str,
@@ -218,16 +223,16 @@ class ComprehensiveRepository:
         return results
 
     def get_air_controller_by_flight_nbr(self, flight_nbr: str):
-        property_names = [AirController.COLUMNS[x].name for x in Flight.COLUMNS]
-        self._exec_sql(f"SELECT {','.join(['ATC.' + AirController.COLUMNS[x].name for x in Flight.COLUMNS])} "
+        property_names = [AirController.COLUMNS[x].name for x in AirController.COLUMNS]
+        self._exec_sql(f"SELECT {','.join(['ATC.' + AirController.COLUMNS[x].name for x in AirController.COLUMNS])} "
                        f"FROM {AirController.TABLE_NAME} AS ATC "
                        f"WHERE EXISTS("
                        f"SELECT 1 FROM {Flight.TABLE_NAME} AS FLT "
                        f"WHERE FLT.{Flight.COLUMNS[Flight.COL_FLIGHT_NBR].name}='{flight_nbr}' AND ("
                        f"FLT.{Flight.COLUMNS[Flight.COL_ORIG_ICAO].name}="
                        f"ATC.{AirController.COLUMNS[AirController.COL_AIRPORT_ICAO].name} OR "
-                       f"FLT.{Flight.COLUMNS[Flight.COLUMNS[Flight.COL_DEST_ICAO].name]}="
-                       f"ATC.{AirController.COLUMNS[AirController.COL_AIRPORT_ICAO]}));")
+                       f"FLT.{Flight.COLUMNS[Flight.COL_DEST_ICAO].name}="
+                       f"ATC.{AirController.COLUMNS[AirController.COL_AIRPORT_ICAO].name}));")
 
         tuples = self.cursor.fetchall()
         results = []

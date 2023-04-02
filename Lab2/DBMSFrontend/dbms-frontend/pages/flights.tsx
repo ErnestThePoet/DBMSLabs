@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect, Key } from "react";
-import styles from "../styles/flights.module.scss";
+import styles from "@/styles/flights.module.scss";
 import {
     Space,
     Table,
@@ -18,7 +18,7 @@ import { stringCompare } from "@/modules/cmp";
 import flights from "@/states/flights";
 import type { SingleFlight } from "@/states/flights";
 import { toDateTimeStr } from "@/modules/date-time";
-import * as L from "../logics/flights";
+import * as L from "@/logics/flights";
 
 const columns: ColumnsType<SingleFlight> = [
     {
@@ -66,7 +66,7 @@ const columns: ColumnsType<SingleFlight> = [
         sorter: (a, b) => stringCompare(a.acType, b.acType)
     },
     {
-        title: "飞行机组ID",
+        title: "飞行机组职工号",
         dataIndex: "pilotIds",
         showSorterTooltip: false,
         sorter: (a, b) => stringCompare(a.pilotIds, b.pilotIds)
@@ -144,7 +144,6 @@ const FlightsPage: React.FC = observer(() => {
             </div>
 
             <Modal
-                destroyOnClose
                 title="添加航班"
                 onCancel={() => setIsAddFlightDialogOpen(false)}
                 open={isAddFlightDialogOpen}
@@ -184,8 +183,8 @@ const FlightsPage: React.FC = observer(() => {
                         <Input placeholder="请输入飞机注册号" />
                     </Form.Item>
 
-                    <Form.Item name="pilotId" label="飞行员ID">
-                        <Input placeholder="请输入飞行员ID" />
+                    <Form.Item name="pilotId" label="飞行员职工号">
+                        <Input placeholder="请输入飞行员职工号" />
                     </Form.Item>
 
                     <Form.Item
