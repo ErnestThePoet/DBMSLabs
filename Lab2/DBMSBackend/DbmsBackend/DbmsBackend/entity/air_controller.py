@@ -14,6 +14,10 @@ class AirController:
         COL_AIRPORT_ICAO: ColumnMeta("airportIcao", Airport.COLUMNS[Airport.COL_ICAO].sql_type)
     }
 
+    CREATE_TABLE_EXTRA = join_create_table_extra([
+        generate_index(COLUMNS, COL_AIRPORT_ICAO)
+    ])
+
     def __init__(self, id: int, name: str, airport_icao: str):
         self.id = id
         self.name = name
