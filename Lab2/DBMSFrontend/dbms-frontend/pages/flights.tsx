@@ -11,7 +11,7 @@ import {
     Input,
     DatePicker
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
 import type { ColumnsType } from "antd/es/table";
 import { stringCompare } from "@/modules/cmp";
@@ -92,13 +92,7 @@ const FlightsPage: React.FC = observer(() => {
         isAddFlightDialogConfirmLoading,
         setIsAddFlightDialogConfirmLoading
     ] = useState(false);
-
-    const [isDeleteFlightDialogOpen, setIsDeleteFlightDialogOpen] =
-        useState(false);
-    const [
-        isDeleteFlightDialogFlightLoading,
-        setIsDeleteFlightDialogFlightLoading
-    ] = useState(false);
+    const [addFlightErrorMessage, setAddFlightErrorMessage] = useState("");
 
     return (
         <Spin spinning={isFlightsLoading}>
@@ -113,7 +107,23 @@ const FlightsPage: React.FC = observer(() => {
                         onClick={() => setIsAddFlightDialogOpen(true)}>
                         添加航班
                     </Button>
-                    <Button danger disabled={selectedRowKeys.length === 0}>
+                    <Button
+                        danger
+                        disabled={selectedRowKeys.length === 0}
+                        onClick={() =>
+                            Modal.confirm({
+                                title: "删除航班",
+                                okText: "确认删除",
+                                cancelText: "返回",
+                                icon: <ExclamationCircleOutlined />,
+                                content: "确认删除所选航班吗？",
+                                onOk: () =>
+                                    L.deleteFlight(
+                                        selectedRowKeys[0] as number,
+                                        setIsFlightsLoading
+                                    )
+                            })
+                        }>
                         删除所选航班
                     </Button>
                 </Space>
@@ -125,6 +135,7 @@ const FlightsPage: React.FC = observer(() => {
                         key: i
                     }))}
                     rowSelection={{
+                        type: "radio",
                         onChange: (newSelectedRowKeys: Key[]) => {
                             setSelectedRowKeys(newSelectedRowKeys);
                         }
@@ -145,7 +156,8 @@ const FlightsPage: React.FC = observer(() => {
                             e,
                             setIsFlightsLoading,
                             setIsAddFlightDialogConfirmLoading,
-                            setIsAddFlightDialogOpen
+                            setIsAddFlightDialogOpen,
+                            setAddFlightErrorMessage
                         )
                     }>
                     <Form.Item name="flightNbr" label="航班号">
@@ -176,7 +188,9 @@ const FlightsPage: React.FC = observer(() => {
                         <Input placeholder="请输入飞行员ID" />
                     </Form.Item>
 
-                    <Form.Item>
+                    <Form.Item
+                        validateStatus="error"
+                        help={addFlightErrorMessage}>
                         <Button
                             type="primary"
                             htmlType="submit"

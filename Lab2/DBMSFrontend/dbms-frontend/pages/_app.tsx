@@ -4,6 +4,7 @@ import { Layout, Menu } from "antd";
 import "antd/dist/reset.css";
 import { ItemType } from "antd/es/menu/hooks/useItems";
 import * as L from "../logics/app";
+import Head from "next/head";
 
 const { Header, Content } = Layout;
 
@@ -18,28 +19,36 @@ export default function App({ Component, pageProps }: AppProps) {
     const [selectedMenuKey, setselectedMenuKey] = useState<string>("0");
 
     return (
-        <Layout>
-            <Header
-                style={{
-                    position: "sticky",
-                    top: 0,
-                    zIndex: 1,
-                    width: "100%"
-                }}>
-                <Menu
-                    theme="dark"
-                    mode="horizontal"
-                    defaultSelectedKeys={[selectedMenuKey]}
-                    items={menuItems}
-                    onClick={e => {
-                        setselectedMenuKey(e.key);
-                        L.routerJump(e.key);
-                    }}
+        <>
+            <Head>
+                <meta
+                    name="viewport"
+                    content="width=device-width, initial-scale=1"
                 />
-            </Header>
-            <Content>
-                <Component {...pageProps} />
-            </Content>
-        </Layout>
+            </Head>
+            <Layout>
+                <Header
+                    style={{
+                        position: "sticky",
+                        top: 0,
+                        zIndex: 1,
+                        width: "100%"
+                    }}>
+                    <Menu
+                        theme="dark"
+                        mode="horizontal"
+                        defaultSelectedKeys={[selectedMenuKey]}
+                        items={menuItems}
+                        onClick={e => {
+                            setselectedMenuKey(e.key);
+                            L.routerJump(e.key);
+                        }}
+                    />
+                </Header>
+                <Content>
+                    <Component {...pageProps} />
+                </Content>
+            </Layout>
+        </>
     );
 }

@@ -29,13 +29,14 @@ class ComprehensiveController:
 
     @csrf_exempt
     def delete_flight(self, request):
+        request_obj = json.loads(request.body.decode("utf-8"))
         if PRINT_REQUEST:
-            print("delete_flight", request.DELETE)
+            print("delete_flight", request_obj)
         return JsonResponse(self.comprehensive_service.delete_flight(
-            request.DELETE["flightNbr"],
-            request.DELETE["origIcao"],
-            request.DELETE["destIcao"],
-            request.DELETE["depTime"]))
+            request_obj["flightNbr"],
+            request_obj["origIcao"],
+            request_obj["destIcao"],
+            request_obj["depTime"]))
 
     @csrf_exempt
     def get_all_flight_info(self, request):

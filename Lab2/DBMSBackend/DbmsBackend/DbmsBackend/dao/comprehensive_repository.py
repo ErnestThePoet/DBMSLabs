@@ -18,7 +18,7 @@ class ComprehensiveRepository:
         self.cursor = self.database.cursor()
 
         self._create_tables()
-        
+
         # Run for the first start only
         try:
             self._init_tables()
@@ -147,6 +147,18 @@ class ComprehensiveRepository:
                               f"{Flight.COLUMNS[Flight.COL_ORIG_ICAO].name}='{orig_icao}' AND "
                               f"{Flight.COLUMNS[Flight.COL_DEST_ICAO].name}='{dest_icao}' AND "
                               f"{Flight.COLUMNS[Flight.COL_DEP_TIME].name}={dep_time};"
+                              )
+
+    def delete_pilot_flight(self,
+                      flight_nbr: str,
+                      orig_icao: str,
+                      dest_icao: str,
+                      dep_time: int):
+        self._exec_sql_commit(f"DELETE FROM {PilotFlight.TABLE_NAME} WHERE "
+                              f"{PilotFlight.COLUMNS[PilotFlight.COL_FLIGHT_NBR].name}='{flight_nbr}' AND "
+                              f"{PilotFlight.COLUMNS[PilotFlight.COL_FLIGHT_ORIG_ICAO].name}='{orig_icao}' AND "
+                              f"{PilotFlight.COLUMNS[PilotFlight.COL_FLIGHT_DEST_ICAO].name}='{dest_icao}' AND "
+                              f"{PilotFlight.COLUMNS[PilotFlight.COL_FLIGHT_DEP_TIME].name}={dep_time};"
                               )
 
     def get_all_flight_info(self):

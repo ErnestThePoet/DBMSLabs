@@ -25,6 +25,10 @@ class ComprehensiveService:
                       dest_icao: str,
                       dep_time: int):
         try:
+            self.comprehensive_repository.delete_pilot_flight(flight_nbr,
+                                                              orig_icao,
+                                                              dest_icao,
+                                                              dep_time)
             self.comprehensive_repository.delete_flight(flight_nbr,
                                                         orig_icao,
                                                         dest_icao,
