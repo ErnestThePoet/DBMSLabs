@@ -8,6 +8,7 @@ import { stringCompare } from "@/modules/cmp";
 import airlineStats from "@/states/airline_stats";
 import type { SingleAirlineFlightCount } from "@/states/airline_stats";
 import * as L from "@/logics/airline_stats";
+import Head from "next/head";
 
 const columns: ColumnsType<SingleAirlineFlightCount> = [
     {
@@ -30,41 +31,46 @@ const AirlineStatsPage: React.FC = observer(() => {
     const [minFlightCount, setMinFlightCount] = useState(2);
 
     return (
-        <Spin spinning={isAtcLoading}>
-            <div className={stylesCommon.divContentWrapper}>
-                <Space size={20} style={{ marginBottom: 20 }}>
-                    <Space>
-                        <label>最小航班数量：</label>
-                        <InputNumber
-                            placeholder="请输入最小航班数量"
-                            min={1}
-                            onChange={e => setMinFlightCount(e!)}
-                            value={minFlightCount}
-                            precision={0}
-                        />
+        <>
+            <Head>
+                <title>HIT民航信息监控系统 - 航司统计</title>
+            </Head>
+            <Spin spinning={isAtcLoading}>
+                <div className={stylesCommon.divContentWrapper}>
+                    <Space size={20} style={{ marginBottom: 20 }}>
+                        <Space>
+                            <label>最小航班数量：</label>
+                            <InputNumber
+                                placeholder="请输入最小航班数量"
+                                min={1}
+                                onChange={e => setMinFlightCount(e!)}
+                                value={minFlightCount}
+                                precision={0}
+                            />
+                        </Space>
+
+                        <Button
+                            type="primary"
+                            onClick={() =>
+                                L.getAllAirlineFlightCount(
+                                    minFlightCount,
+                                    setIsAtcLoading
+                                )
+                            }>
+                            查询
+                        </Button>
                     </Space>
 
-                    <Button
-                        type="primary"
-                        onClick={() =>
-                            L.getAllAirlineFlightCount(
-                                minFlightCount,
-                                setIsAtcLoading
-                            )
-                        }>
-                        查询
-                    </Button>
-                </Space>
-
-                <Table
-                    columns={columns}
-                    dataSource={airlineStats.flightCounts.map((x, i) => ({
-                        ...x,
-                        key: i
-                    }))}
-                />
-            </div>
-        </Spin>
+                    <Table
+                        columns={columns}
+                        dataSource={airlineStats.flightCounts.map((x, i) => ({
+                            ...x,
+                            key: i
+                        }))}
+                    />
+                </div>
+            </Spin>
+        </>
     );
 });
 

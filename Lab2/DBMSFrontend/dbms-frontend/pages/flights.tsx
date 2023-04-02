@@ -19,6 +19,7 @@ import flights from "@/states/flights";
 import type { SingleFlight } from "@/states/flights";
 import { toDateTimeStr } from "@/modules/date-time";
 import * as L from "@/logics/flights";
+import Head from "next/head";
 
 const columns: ColumnsType<SingleFlight> = [
     {
@@ -95,109 +96,114 @@ const FlightsPage: React.FC = observer(() => {
     const [addFlightErrorMessage, setAddFlightErrorMessage] = useState("");
 
     return (
-        <Spin spinning={isFlightsLoading}>
-            <div className={stylesCommon.divContentWrapper}>
-                <Space size={20} style={{ marginBottom: 20 }}>
-                    <Button
-                        type="primary"
-                        icon={<PlusOutlined />}
-                        onClick={() => setIsAddFlightDialogOpen(true)}>
-                        添加航班
-                    </Button>
-                    <Button
-                        danger
-                        disabled={selectedRowKeys.length === 0}
-                        onClick={() =>
-                            Modal.confirm({
-                                title: "删除航班",
-                                okText: "确认删除",
-                                cancelText: "返回",
-                                icon: <ExclamationCircleOutlined />,
-                                content: "确认删除所选航班吗？",
-                                onOk: () =>
-                                    L.deleteFlight(
-                                        selectedRowKeys[0] as number,
-                                        setIsFlightsLoading
-                                    )
-                            })
-                        }>
-                        删除所选航班
-                    </Button>
-                </Space>
-
-                <Table
-                    columns={columns}
-                    dataSource={flights.flights.map((x, i) => ({
-                        ...x,
-                        key: i
-                    }))}
-                    rowSelection={{
-                        type: "radio",
-                        onChange: (newSelectedRowKeys: Key[]) => {
-                            setSelectedRowKeys(newSelectedRowKeys);
-                        }
-                    }}
-                />
-            </div>
-
-            <Modal
-                title="添加航班"
-                onCancel={() => setIsAddFlightDialogOpen(false)}
-                open={isAddFlightDialogOpen}
-                footer={null}>
-                <Form
-                    name="change_pw"
-                    onFinish={e =>
-                        L.addFlight(
-                            e,
-                            setIsFlightsLoading,
-                            setIsAddFlightDialogConfirmLoading,
-                            setIsAddFlightDialogOpen,
-                            setAddFlightErrorMessage
-                        )
-                    }>
-                    <Form.Item name="flightNbr" label="航班号">
-                        <Input placeholder="请输入航班号" />
-                    </Form.Item>
-
-                    <Form.Item name="origIcao" label="起飞机场ICAO">
-                        <Input placeholder="请输入起飞机场ICAO" />
-                    </Form.Item>
-
-                    <Form.Item name="destIcao" label="目的机场ICAO">
-                        <Input placeholder="请输入目的机场ICAO" />
-                    </Form.Item>
-
-                    <Form.Item name="depTime" label="起飞时间">
-                        <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-                    </Form.Item>
-
-                    <Form.Item name="arrTime" label="着陆时间">
-                        <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-                    </Form.Item>
-
-                    <Form.Item name="acRegNo" label="飞机注册号">
-                        <Input placeholder="请输入飞机注册号" />
-                    </Form.Item>
-
-                    <Form.Item name="pilotId" label="飞行员职工号">
-                        <Input placeholder="请输入飞行员职工号" />
-                    </Form.Item>
-
-                    <Form.Item
-                        validateStatus="error"
-                        help={addFlightErrorMessage}>
+        <>
+            <Head>
+                <title>HIT民航信息监控系统 - 航班查询</title>
+            </Head>
+            <Spin spinning={isFlightsLoading}>
+                <div className={stylesCommon.divContentWrapper}>
+                    <Space size={20} style={{ marginBottom: 20 }}>
                         <Button
                             type="primary"
-                            htmlType="submit"
-                            block
-                            loading={isAddFlightDialogConfirmLoading}>
+                            icon={<PlusOutlined />}
+                            onClick={() => setIsAddFlightDialogOpen(true)}>
                             添加航班
                         </Button>
-                    </Form.Item>
-                </Form>
-            </Modal>
-        </Spin>
+                        <Button
+                            danger
+                            disabled={selectedRowKeys.length === 0}
+                            onClick={() =>
+                                Modal.confirm({
+                                    title: "删除航班",
+                                    okText: "确认删除",
+                                    cancelText: "返回",
+                                    icon: <ExclamationCircleOutlined />,
+                                    content: "确认删除所选航班吗？",
+                                    onOk: () =>
+                                        L.deleteFlight(
+                                            selectedRowKeys[0] as number,
+                                            setIsFlightsLoading
+                                        )
+                                })
+                            }>
+                            删除所选航班
+                        </Button>
+                    </Space>
+
+                    <Table
+                        columns={columns}
+                        dataSource={flights.flights.map((x, i) => ({
+                            ...x,
+                            key: i
+                        }))}
+                        rowSelection={{
+                            type: "radio",
+                            onChange: (newSelectedRowKeys: Key[]) => {
+                                setSelectedRowKeys(newSelectedRowKeys);
+                            }
+                        }}
+                    />
+                </div>
+
+                <Modal
+                    title="添加航班"
+                    onCancel={() => setIsAddFlightDialogOpen(false)}
+                    open={isAddFlightDialogOpen}
+                    footer={null}>
+                    <Form
+                        name="change_pw"
+                        onFinish={e =>
+                            L.addFlight(
+                                e,
+                                setIsFlightsLoading,
+                                setIsAddFlightDialogConfirmLoading,
+                                setIsAddFlightDialogOpen,
+                                setAddFlightErrorMessage
+                            )
+                        }>
+                        <Form.Item name="flightNbr" label="航班号">
+                            <Input placeholder="请输入航班号" />
+                        </Form.Item>
+
+                        <Form.Item name="origIcao" label="起飞机场ICAO">
+                            <Input placeholder="请输入起飞机场ICAO" />
+                        </Form.Item>
+
+                        <Form.Item name="destIcao" label="目的机场ICAO">
+                            <Input placeholder="请输入目的机场ICAO" />
+                        </Form.Item>
+
+                        <Form.Item name="depTime" label="起飞时间">
+                            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+                        </Form.Item>
+
+                        <Form.Item name="arrTime" label="着陆时间">
+                            <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
+                        </Form.Item>
+
+                        <Form.Item name="acRegNo" label="飞机注册号">
+                            <Input placeholder="请输入飞机注册号" />
+                        </Form.Item>
+
+                        <Form.Item name="pilotId" label="飞行员职工号">
+                            <Input placeholder="请输入飞行员职工号" />
+                        </Form.Item>
+
+                        <Form.Item
+                            validateStatus="error"
+                            help={addFlightErrorMessage}>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                block
+                                loading={isAddFlightDialogConfirmLoading}>
+                                添加航班
+                            </Button>
+                        </Form.Item>
+                    </Form>
+                </Modal>
+            </Spin>
+        </>
     );
 });
 
