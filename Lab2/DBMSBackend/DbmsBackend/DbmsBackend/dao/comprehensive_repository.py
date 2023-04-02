@@ -18,8 +18,12 @@ class ComprehensiveRepository:
         self.cursor = self.database.cursor()
 
         self._create_tables()
+        
         # Run for the first start only
-        # self._init_tables()
+        try:
+            self._init_tables()
+        except:
+            pass
 
     def _exec_sql(self, sql: str):
         self.cursor.execute(sql)
@@ -40,13 +44,14 @@ class ComprehensiveRepository:
         self._create_table(Aircraft)
         self._create_table(Fdr)
 
+        self._create_table(Airport)
+        self._create_table(AirController)
+
         self._create_table(Flight)
         self._create_table(Pilot)
         self._create_table(PilotFlight)
 
-        self._create_table(Airport)
-        self._create_table(AirController)
-        self._exec_sql_commit(f"CREATE VIEW v_aircraft_flights AS "
+        self._exec_sql_commit(f"CREATE OR REPLACE VIEW v_aircraft_flights AS "
                               f"SELECT AC.{Aircraft.COLUMNS[Aircraft.COL_AIRLINE_ICAO].name},FLT.{Flight.COLUMNS[Flight.COL_FLIGHT_NBR].name} "
                               f"FROM {Flight.TABLE_NAME} AS FLT "
                               f"INNER JOIN {Aircraft.TABLE_NAME} AS AC "

@@ -1,18 +1,20 @@
-import { useRouter } from 'next/router';
-import Head from 'next/head';
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import Head from "next/head";
 
 export default function Home() {
-  const router = useRouter();
+    const router = useRouter();
 
-  router.replace("/flights");
+    useEffect(() => {
+        router.replace("/flights");
+    });
 
-  return (
-    <>
-      <Head>
-        <title>HIT民航信息监控系统</title>
-      </Head>
-      
-      You are being redirected to the /flights page.
-    </>
-  );
+    return (
+        <>
+            <Head>
+                <title>HIT民航信息监控系统</title>
+            </Head>
+            You are being redirected to the /flights page.
+        </>
+    );
 }

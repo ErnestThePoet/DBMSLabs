@@ -1,6 +1,6 @@
 #### 添加航班
 * 请求方法：POST
-* 请求参数：
+* 请求参数：表单
 {
     flightNbr:string|null;
     origIcao:string|null;

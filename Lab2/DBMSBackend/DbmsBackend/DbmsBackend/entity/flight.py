@@ -1,5 +1,6 @@
 from .base.entity import *
 from .aircraft import Aircraft
+from .airport import Airport
 
 
 @entity("flights")
@@ -27,6 +28,8 @@ class Flight:
         generate_index(COLUMNS, COL_ORIG_ICAO),
         generate_index(COLUMNS, COL_DEST_ICAO),
         generate_index(COLUMNS, COL_DEP_TIME),
+        generate_foreign_key(COLUMNS, COL_ORIG_ICAO, Airport, Airport.COL_ICAO),
+        generate_foreign_key(COLUMNS, COL_DEST_ICAO, Airport, Airport.COL_ICAO),
         generate_foreign_key(COLUMNS, COL_AC_REG_NO, Aircraft, Aircraft.COL_REG_NO)
     ])
 
