@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
-import React, { useState, Key } from "react";
-import styles from "@/styles/flights.module.scss";
+import React, { useState } from "react";
+import stylesCommon from "@/styles/common.module.scss";
 import { Space, Table, Button, Spin, Input } from "antd";
 
 import type { ColumnsType } from "antd/es/table";
@@ -37,11 +37,8 @@ const AtcQueryPage: React.FC = observer(() => {
 
     return (
         <Spin spinning={isAtcLoading}>
-            <div className={styles.divFlightsWrapper}>
-                <Space
-                    direction="horizontal"
-                    size={20}
-                    style={{ marginBottom: 20 }}>
+            <div className={stylesCommon.divContentWrapper}>
+                <Space size={20} style={{ marginBottom: 20 }}>
                     <Input
                         placeholder="请输入航班号"
                         onChange={e => setFlightNumber(e.currentTarget.value)}

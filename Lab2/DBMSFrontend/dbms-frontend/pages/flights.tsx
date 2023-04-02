@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import React, { useState, useEffect, Key } from "react";
-import styles from "@/styles/flights.module.scss";
+import stylesCommon from "@/styles/common.module.scss";
 import {
     Space,
     Table,
@@ -96,11 +96,8 @@ const FlightsPage: React.FC = observer(() => {
 
     return (
         <Spin spinning={isFlightsLoading}>
-            <div className={styles.divFlightsWrapper}>
-                <Space
-                    direction="horizontal"
-                    size={20}
-                    style={{ marginBottom: 20 }}>
+            <div className={stylesCommon.divContentWrapper}>
+                <Space size={20} style={{ marginBottom: 20 }}>
                     <Button
                         type="primary"
                         icon={<PlusOutlined />}

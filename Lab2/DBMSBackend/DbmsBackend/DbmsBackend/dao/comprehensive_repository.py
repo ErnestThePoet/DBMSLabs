@@ -245,11 +245,11 @@ class ComprehensiveRepository:
 
         return results
 
-    def get_all_airline_flight_count(self, min_count: int):
+    def get_all_airline_flight_count(self, min_flight_count: int):
         self._exec_sql(f"SELECT {Aircraft.COLUMNS[Aircraft.COL_AIRLINE_ICAO].name},COUNT(1) "
                        f"FROM v_aircraft_flights "
                        f"GROUP BY {Aircraft.COLUMNS[Aircraft.COL_AIRLINE_ICAO].name} "
-                       f"HAVING COUNT(1)>={min_count};")
+                       f"HAVING COUNT(1)>={min_flight_count};")
 
         tuples = self.cursor.fetchall()
         return [{"icao": x[0], "flightCount": x[1]} for x in tuples]

@@ -1,6 +1,6 @@
 #### 添加航班
 * 请求方法：POST
-* 请求参数：表单
+* 请求参数：
 {
     flightNbr:string|null;
     origIcao:string|null;
@@ -77,7 +77,7 @@
 * 请求方法：GET
 * 请求参数：
 {
-    minCount:number;
+    minFlightCount:number;
 }
 * 返回类型：json
 * 返回格式：
