@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Layout, Menu } from "antd";
 import "antd/dist/reset.css";
 import { ItemType } from "antd/es/menu/hooks/useItems";
-import * as L from "../logics/app";
+import * as L from "@/logics/app";
 import Head from "next/head";
 
 const { Header, Content } = Layout;

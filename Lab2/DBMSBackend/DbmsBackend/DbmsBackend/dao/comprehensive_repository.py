@@ -147,12 +147,16 @@ class ComprehensiveRepository:
                       orig_icao: str,
                       dest_icao: str,
                       dep_time: int):
+        # Temporarily disables foreign key check in case we delete a flight number that
+        # appears multiple times
+        self._exec_sql("SET SESSION FOREIGN_KEY_CHECKS=0;")
         self._exec_sql_commit(f"DELETE FROM {Flight.TABLE_NAME} WHERE "
                               f"{Flight.COLUMNS[Flight.COL_FLIGHT_NBR].name}='{flight_nbr}' AND "
                               f"{Flight.COLUMNS[Flight.COL_ORIG_ICAO].name}='{orig_icao}' AND "
                               f"{Flight.COLUMNS[Flight.COL_DEST_ICAO].name}='{dest_icao}' AND "
                               f"{Flight.COLUMNS[Flight.COL_DEP_TIME].name}={dep_time};"
                               )
+        self._exec_sql("SET SESSION FOREIGN_KEY_CHECKS=1;")
 
     def delete_pilot_flight(self,
                       flight_nbr: str,
