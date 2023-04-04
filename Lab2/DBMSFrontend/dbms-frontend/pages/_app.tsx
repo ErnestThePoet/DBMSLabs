@@ -6,6 +6,8 @@ import "antd/dist/reset.css";
 import { ItemType } from "antd/es/menu/hooks/useItems";
 import * as L from "@/logics/app";
 import Head from "next/head";
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 
 const { Header, Content } = Layout;
 
@@ -34,7 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
     }, [router.isReady, router.route]);
 
     return (
-        <>
+        <Provider store={store}>
             <Head>
                 <meta
                     name="viewport"
@@ -63,6 +65,6 @@ export default function App({ Component, pageProps }: AppProps) {
                     <Component {...pageProps} />
                 </Content>
             </Layout>
-        </>
+        </Provider>
     );
 }

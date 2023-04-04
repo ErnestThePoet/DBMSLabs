@@ -1,14 +1,18 @@
-import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+    selectFlightCounts,
+    selectIsFlightCountsLoading,
+    clearFlightCounts,
+    getAllAirlineFlightCountAsync
+} from "@/store/features/flight-counts/flight-counts";
 import stylesCommon from "@/styles/common.module.scss";
 import { Space, Table, Button, Spin, InputNumber } from "antd";
 
 import type { ColumnsType } from "antd/es/table";
 import { stringCompare } from "@/modules/cmp";
-import airlineStats from "@/states/airline_stats";
-import type { SingleAirlineFlightCount } from "@/states/airline_stats";
-import * as L from "@/logics/airline_stats";
 import Head from "next/head";
+import type { SingleAirlineFlightCount } from "@/modules/types";
 
 const columns: ColumnsType<SingleAirlineFlightCount> = [
     {
@@ -25,12 +29,15 @@ const columns: ColumnsType<SingleAirlineFlightCount> = [
     }
 ];
 
-const AirlineStatsPage: React.FC = observer(() => {
+const AirlineStatsPage: React.FC = () => {
     useEffect(() => {
-        airlineStats.clearFlightCounts();
-    },[]);
-    
-    const [isAtcLoading, setIsAtcLoading] = useState(false);
+        dispatch(clearFlightCounts());
+    }, []);
+
+    const dispatch = useAppDispatch();
+    const flightCounts = useAppSelector(selectFlightCounts);
+
+    const isAtcLoading = useAppSelector(selectIsFlightCountsLoading);
 
     const [minFlightCount, setMinFlightCount] = useState(2);
 
@@ -56,9 +63,10 @@ const AirlineStatsPage: React.FC = observer(() => {
                         <Button
                             type="primary"
                             onClick={() =>
-                                L.getAllAirlineFlightCount(
-                                    minFlightCount,
-                                    setIsAtcLoading
+                                dispatch(
+                                    getAllAirlineFlightCountAsync(
+                                        minFlightCount
+                                    )
                                 )
                             }>
                             查询
@@ -67,7 +75,7 @@ const AirlineStatsPage: React.FC = observer(() => {
 
                     <Table
                         columns={columns}
-                        dataSource={airlineStats.flightCounts.map((x, i) => ({
+                        dataSource={flightCounts.map((x, i) => ({
                             ...x,
                             key: i
                         }))}
@@ -76,6 +84,6 @@ const AirlineStatsPage: React.FC = observer(() => {
             </Spin>
         </>
     );
-});
+};
 
 export default AirlineStatsPage;

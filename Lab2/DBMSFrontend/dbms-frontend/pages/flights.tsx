@@ -1,5 +1,6 @@
-import { observer } from "mobx-react-lite";
 import React, { useState, useEffect, Key } from "react";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import * as S from "@/store/features/flights/flights";
 import stylesCommon from "@/styles/common.module.scss";
 import {
     Space,
@@ -15,11 +16,9 @@ import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 
 import type { ColumnsType } from "antd/es/table";
 import { stringCompare } from "@/modules/cmp";
-import flights from "@/states/flights";
-import type { SingleFlight } from "@/states/flights";
 import { toDateTimeStr } from "@/modules/date-time";
-import * as L from "@/logics/flights";
 import Head from "next/head";
+import type { SingleFlight } from "@/modules/types";
 
 const columns: ColumnsType<SingleFlight> = [
     {
@@ -80,20 +79,19 @@ const columns: ColumnsType<SingleFlight> = [
     }
 ];
 
-const FlightsPage: React.FC = observer(() => {
+const FlightsPage: React.FC = () => {
     useEffect(() => {
-        L.updateFlights(setIsFlightsLoading);
+        dispatch(S.updateFlightsAsync());
     }, []);
 
-    const [isFlightsLoading, setIsFlightsLoading] = useState(false);
-    const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
+    const dispatch = useAppDispatch();
+    const flights = useAppSelector(S.selectFlights);
+    const isFlightsLoading = useAppSelector(S.selectIsFlightsLoading);
+    const isAddFlightsLoading = useAppSelector(S.selectIsAddFlightLoading);
+    const isAddFlightDialogOpen = useAppSelector(S.selectIsAddFlightDialogOpen);
+    const addFlightErrorMessage = useAppSelector(S.selectAddFlightErrorMessage);
 
-    const [isAddFlightDialogOpen, setIsAddFlightDialogOpen] = useState(false);
-    const [
-        isAddFlightDialogConfirmLoading,
-        setIsAddFlightDialogConfirmLoading
-    ] = useState(false);
-    const [addFlightErrorMessage, setAddFlightErrorMessage] = useState("");
+    const [selectedRowKeys, setSelectedRowKeys] = useState<Key[]>([]);
 
     return (
         <>
@@ -106,7 +104,9 @@ const FlightsPage: React.FC = observer(() => {
                         <Button
                             type="primary"
                             icon={<PlusOutlined />}
-                            onClick={() => setIsAddFlightDialogOpen(true)}>
+                            onClick={() =>
+                                dispatch(S.setIsAddFlightDialogOpen(true))
+                            }>
                             添加航班
                         </Button>
                         <Button
@@ -120,9 +120,25 @@ const FlightsPage: React.FC = observer(() => {
                                     icon: <ExclamationCircleOutlined />,
                                     content: "确认删除所选航班吗？",
                                     onOk: () =>
-                                        L.deleteFlight(
-                                            selectedRowKeys[0] as number,
-                                            setIsFlightsLoading
+                                        dispatch(
+                                            S.deleteFlightAsync({
+                                                flightNbr:
+                                                    flights[
+                                                        selectedRowKeys[0] as number
+                                                    ].flightNbr,
+                                                origIcao:
+                                                    flights[
+                                                        selectedRowKeys[0] as number
+                                                    ].origIcao,
+                                                destIcao:
+                                                    flights[
+                                                        selectedRowKeys[0] as number
+                                                    ].destIcao,
+                                                depTime:
+                                                    flights[
+                                                        selectedRowKeys[0] as number
+                                                    ].depTime
+                                            })
                                         )
                                 })
                             }>
@@ -132,7 +148,7 @@ const FlightsPage: React.FC = observer(() => {
 
                     <Table
                         columns={columns}
-                        dataSource={flights.flights.map((x, i) => ({
+                        dataSource={flights.map((x, i) => ({
                             ...x,
                             key: i
                         }))}
@@ -147,20 +163,12 @@ const FlightsPage: React.FC = observer(() => {
 
                 <Modal
                     title="添加航班"
-                    onCancel={() => setIsAddFlightDialogOpen(false)}
+                    onCancel={() => dispatch(S.setIsAddFlightDialogOpen(false))}
                     open={isAddFlightDialogOpen}
                     footer={null}>
                     <Form
                         name="change_pw"
-                        onFinish={e =>
-                            L.addFlight(
-                                e,
-                                setIsFlightsLoading,
-                                setIsAddFlightDialogConfirmLoading,
-                                setIsAddFlightDialogOpen,
-                                setAddFlightErrorMessage
-                            )
-                        }>
+                        onFinish={e => dispatch(S.addFlightAsync(e))}>
                         <Form.Item name="flightNbr" label="航班号">
                             <Input placeholder="请输入航班号" />
                         </Form.Item>
@@ -196,7 +204,7 @@ const FlightsPage: React.FC = observer(() => {
                                 type="primary"
                                 htmlType="submit"
                                 block
-                                loading={isAddFlightDialogConfirmLoading}>
+                                loading={isAddFlightsLoading}>
                                 添加航班
                             </Button>
                         </Form.Item>
@@ -205,6 +213,6 @@ const FlightsPage: React.FC = observer(() => {
             </Spin>
         </>
     );
-});
+};
 
 export default FlightsPage;

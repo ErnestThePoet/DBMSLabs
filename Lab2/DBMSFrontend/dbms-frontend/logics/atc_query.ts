@@ -1,15 +1,11 @@
 import axios, { AxiosError } from "axios";
-import type { SetBooleanStateFn } from "@/modules/fn-types";
 import APIS from "@/modules/apis";
 import { message } from "antd";
-import atcs from "@/states/atcs";
+import type { AsyncRequestResult, SingleAtc } from "@/modules/types";
 
-export const getAirControllerByFlightNbr = async (
-    flightNbr: string,
-    setLoading: SetBooleanStateFn
-) => {
-    setLoading(true);
-
+export async function getAirControllerByFlightNbrAsync(
+    flightNbr: string
+): Promise<AsyncRequestResult<SingleAtc[] | null>> {
     try {
         const result = await axios.get(APIS.getAirControllerByFlightNbr, {
             params: {
@@ -17,14 +13,23 @@ export const getAirControllerByFlightNbr = async (
             }
         });
         if (result.data.success) {
-            atcs.setAtcs(result.data.airControllers);
+            return {
+                result: "SUCCESS",
+                data: result.data.airControllers
+            };
         } else {
             message.error(result.data.msg);
+            return {
+                result: "FAILURE",
+                data: null
+            };
         }
     } catch (error) {
         console.log(error);
         message.error((<AxiosError>error).message);
+        return {
+            result: "REJECTED",
+            data: null
+        };
     }
-
-    setLoading(false);
-};
+}

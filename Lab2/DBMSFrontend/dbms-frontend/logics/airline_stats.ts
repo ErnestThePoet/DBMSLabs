@@ -1,19 +1,21 @@
 import axios, { AxiosError } from "axios";
-import type { SetBooleanStateFn } from "@/modules/fn-types";
 import APIS from "@/modules/apis";
 import { message } from "antd";
-import airlineStats from "@/states/airline_stats";
+import type {
+    AsyncRequestResult,
+    SingleAirlineFlightCount
+} from "@/modules/types";
 
-export const getAllAirlineFlightCount = async (
-    minFlightCount: number,
-    setLoading: SetBooleanStateFn
-) => {
+export async function getAllAirlineFlightCountAsync(
+    minFlightCount: number
+): Promise<AsyncRequestResult<SingleAirlineFlightCount[] | null>> {
     if (minFlightCount < 1) {
         message.error("最小航班数量必须为正");
-        return;
+        return {
+            result: "FAILURE",
+            data: null
+        };
     }
-
-    setLoading(true);
 
     try {
         const result = await axios.get(APIS.getAllAirlineFlightCount, {
@@ -22,14 +24,23 @@ export const getAllAirlineFlightCount = async (
             }
         });
         if (result.data.success) {
-            airlineStats.setFlightCounts(result.data.flightCounts);
+            return {
+                result: "SUCCESS",
+                data: result.data.flightCounts
+            };
         } else {
             message.error(result.data.msg);
+            return {
+                result: "FAILURE",
+                data: null
+            };
         }
     } catch (error) {
         console.log(error);
         message.error((<AxiosError>error).message);
+        return {
+            result: "REJECTED",
+            data: null
+        };
     }
-
-    setLoading(false);
-};
+}

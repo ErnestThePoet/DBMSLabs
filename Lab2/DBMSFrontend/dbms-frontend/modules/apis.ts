@@ -1,6 +1,6 @@
 let urlPrefix = "http://localhost:31100/api/";
 
-const APIS = {
+const APIS:{[i:string]:string} = {
     addFlight: "add_flight",
     deleteFlight: "delete_flight",
     getAllFlightInfo: "get_all_flight_info",

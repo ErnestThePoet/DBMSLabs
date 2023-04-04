@@ -1,14 +1,18 @@
-import { observer } from "mobx-react-lite";
 import React, { useState, useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "@/store/hooks";
+import {
+    selectAtcs,
+    selectIsAtcsLoading,
+    getAirControllerByFlightNbrAsync,
+    clearAtcs
+} from "@/store/features/atcs/atcs";
 import stylesCommon from "@/styles/common.module.scss";
 import { Space, Table, Button, Spin, Input } from "antd";
 
 import type { ColumnsType } from "antd/es/table";
 import { stringCompare } from "@/modules/cmp";
-import atcs from "@/states/atcs";
-import type { SingleAtc } from "@/states/atcs";
-import * as L from "@/logics/atc_query";
 import Head from "next/head";
+import type { SingleAtc } from "@/modules/types";
 
 const columns: ColumnsType<SingleAtc> = [
     {
@@ -31,12 +35,15 @@ const columns: ColumnsType<SingleAtc> = [
     }
 ];
 
-const AtcQueryPage: React.FC = observer(() => {
+const AtcQueryPage: React.FC = () => {
     useEffect(() => {
-        atcs.clearAtcs();
-    },[]);
+        dispatch(clearAtcs());
+    }, []);
 
-    const [isAtcLoading, setIsAtcLoading] = useState(false);
+    const dispatch = useAppDispatch();
+
+    const atcs = useAppSelector(selectAtcs);
+    const isAtcLoading = useAppSelector(selectIsAtcsLoading);
 
     const [flightNumber, setFlightNumber] = useState("");
 
@@ -60,9 +67,10 @@ const AtcQueryPage: React.FC = observer(() => {
                             type="primary"
                             disabled={flightNumber.length === 0}
                             onClick={() =>
-                                L.getAirControllerByFlightNbr(
-                                    flightNumber,
-                                    setIsAtcLoading
+                                dispatch(
+                                    getAirControllerByFlightNbrAsync(
+                                        flightNumber
+                                    )
                                 )
                             }>
                             查询
@@ -71,7 +79,7 @@ const AtcQueryPage: React.FC = observer(() => {
 
                     <Table
                         columns={columns}
-                        dataSource={atcs.atcs.map((x, i) => ({
+                        dataSource={atcs.map((x, i) => ({
                             ...x,
                             key: i
                         }))}
@@ -80,6 +88,6 @@ const AtcQueryPage: React.FC = observer(() => {
             </Spin>
         </>
     );
-});
+};
 
 export default AtcQueryPage;

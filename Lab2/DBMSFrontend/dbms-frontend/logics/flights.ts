@@ -1,39 +1,48 @@
 import axios, { AxiosError } from "axios";
-import type { SetBooleanStateFn, SetStateFn } from "@/modules/fn-types";
 import APIS from "@/modules/apis";
 import { message } from "antd";
-import flights from "@/states/flights";
+import type { AsyncRequestResult, SingleFlight } from "@/modules/types";
 
-export const updateFlights = async (setLoading: SetBooleanStateFn) => {
-    setLoading(true);
-
+export async function updateFlightsAsync(): Promise<
+    AsyncRequestResult<SingleFlight[] | null>
+> {
     try {
         const result = await axios.get(APIS.getAllFlightInfo);
         if (result.data.success) {
-            flights.setFlights(result.data.flights);
+            return {
+                result: "SUCCESS",
+                data: result.data.flights
+            };
         } else {
             message.error(result.data.msg);
+            return {
+                result: "FAILURE",
+                data: null
+            };
         }
     } catch (error) {
         console.log(error);
         message.error((<AxiosError>error).message);
+        return {
+            result: "REJECTED",
+            data: null
+        };
     }
+}
 
-    setLoading(false);
-};
-
-export const addFlight = async (
-    e,
-    setFlightsLoading: SetBooleanStateFn,
-    setLoading: SetBooleanStateFn,
-    setOpen: SetBooleanStateFn,
-    setMessage: SetStateFn<string>
-) => {
-    setLoading(true);
-    setMessage("");
-
-    const mapNullString = x => (x === undefined || x === "" ? null : x);
-    const mapNullDate = x => (x === undefined ? null : x.$d.getTime());
+export async function addFlightAsync(e: {
+    flightNbr?: string;
+    origIcao?: string;
+    destIcao?: string;
+    depTime?: { $d: Date };
+    arrTime?: { $d: Date };
+    acRegNo?: string;
+    pilotId?: string;
+}): Promise<AsyncRequestResult<string | null>> {
+    const mapNullString = (x?: string) =>
+        x === undefined || x === "" ? null : x;
+    const mapNullDate = (x?: { $d: Date }) =>
+        x === undefined ? null : x.$d.getTime();
 
     try {
         const result = await axios.post(APIS.addFlight, {
@@ -47,40 +56,56 @@ export const addFlight = async (
         });
         if (result.data.success) {
             message.success("添加成功");
-            updateFlights(setFlightsLoading);
-            setOpen(false);
-        } else {
-            setMessage(result.data.msg);
+            return {
+                result: "SUCCESS",
+                data: null
+            };
         }
+
+        return {
+            result: "FAILURE",
+            data: result.data.msg
+        };
     } catch (error) {
         console.log(error);
         message.error((<AxiosError>error).message);
+
+        return {
+            result: "REJECTED",
+            data: null
+        };
     }
+}
 
-    setLoading(false);
-};
-
-export const deleteFlight = async (
-    index: number,
-    setFlightsLoading: SetBooleanStateFn
-) => {
+export async function deleteFlightAsync(data: {
+    flightNbr: string;
+    origIcao: string;
+    destIcao: string;
+    depTime: number;
+}): Promise<AsyncRequestResult<string | null>> {
     try {
         const result = await axios.delete(APIS.deleteFlight, {
-            data: {
-                flightNbr: flights.flights[index].flightNbr,
-                origIcao: flights.flights[index].origIcao,
-                destIcao: flights.flights[index].destIcao,
-                depTime: flights.flights[index].depTime
-            }
+            data
         });
         if (result.data.success) {
             message.success("删除成功");
-            updateFlights(setFlightsLoading);
+            return {
+                result: "SUCCESS",
+                data: null
+            };
         } else {
             message.error(result.data.msg);
+            return {
+                result: "FAILURE",
+                data: result.data.msg
+            };
         }
     } catch (error) {
         console.log(error);
         message.error((<AxiosError>error).message);
+        return {
+            result: "FAILURE",
+            data: null
+        };
     }
-};
+}
