@@ -18,8 +18,8 @@ class Flight:
         COL_ORIG_ICAO: ColumnMeta("origIcao", "CHAR(4)", "NOT NULL"),
         COL_DEST_ICAO: ColumnMeta("destIcao", "CHAR(4)", "NOT NULL"),
         COL_DEP_TIME: ColumnMeta("depTime", "BIGINT", "NOT NULL"),
-        COL_ARR_TIME: ColumnMeta("arrTime", "BIGINT"),
-        COL_AC_REG_NO: ColumnMeta("acRegNo", Aircraft.COLUMNS[Aircraft.COL_REG_NO].sql_type)
+        COL_ARR_TIME: ColumnMeta("arrTime", "BIGINT", "NOT NULL"),
+        COL_AC_REG_NO: ColumnMeta("acRegNo", Aircraft.COLUMNS[Aircraft.COL_REG_NO].sql_type, "NOT NULL")
     }
 
     CREATE_TABLE_EXTRA = join_create_table_extra([
