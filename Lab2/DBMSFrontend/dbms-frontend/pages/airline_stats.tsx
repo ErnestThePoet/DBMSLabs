@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
     selectFlightCounts,
@@ -13,26 +13,14 @@ import type { ColumnsType } from "antd/es/table";
 import { stringCompare } from "@/modules/cmp";
 import Head from "next/head";
 import type { SingleAirlineFlightCount } from "@/modules/types";
-
-const columns: ColumnsType<SingleAirlineFlightCount> = [
-    {
-        title: "航空公司ICAO",
-        dataIndex: "icao",
-        showSorterTooltip: false,
-        sorter: (a, b) => stringCompare(a.icao, b.icao)
-    },
-    {
-        title: "航班数量",
-        dataIndex: "flightCount",
-        showSorterTooltip: false,
-        sorter: (a, b) => a.flightCount - b.flightCount
-    }
-];
+import { LocaleContext } from "@/locales/locales";
 
 const AirlineStatsPage: React.FC = () => {
     useEffect(() => {
         dispatch(clearFlightCounts());
     }, []);
+
+    const locale = useContext(LocaleContext);
 
     const dispatch = useAppDispatch();
     const flightCounts = useAppSelector(selectFlightCounts);
@@ -41,18 +29,35 @@ const AirlineStatsPage: React.FC = () => {
 
     const [minFlightCount, setMinFlightCount] = useState(2);
 
+    const columns: ColumnsType<SingleAirlineFlightCount> = [
+        {
+            title: locale.AIRLINE_ICAO,
+            dataIndex: "icao",
+            showSorterTooltip: false,
+            sorter: (a, b) => stringCompare(a.icao, b.icao)
+        },
+        {
+            title: locale.FLIGHT_COUNT,
+            dataIndex: "flightCount",
+            showSorterTooltip: false,
+            sorter: (a, b) => a.flightCount - b.flightCount
+        }
+    ];
+
     return (
         <>
             <Head>
-                <title>HIT民航信息监控系统 - 航司统计</title>
+                <title>{locale.APP_TITLE + " - " + locale.FLIGHTS_TITLE}</title>
             </Head>
             <Spin spinning={isAtcLoading}>
                 <div className={stylesCommon.divContentWrapper}>
                     <Space size={20} style={{ marginBottom: 20 }}>
                         <Space>
-                            <label>最小航班数量：</label>
+                            <label>{locale.MIN_FLIGHT_COUNT}:</label>
                             <InputNumber
-                                placeholder="请输入最小航班数量"
+                                placeholder={
+                                    locale.ENTER + locale.MIN_FLIGHT_COUNT
+                                }
                                 min={1}
                                 onChange={e => setMinFlightCount(e!)}
                                 value={minFlightCount}
@@ -69,7 +74,7 @@ const AirlineStatsPage: React.FC = () => {
                                     )
                                 )
                             }>
-                            查询
+                            {locale.QUERY}
                         </Button>
                     </Space>
 

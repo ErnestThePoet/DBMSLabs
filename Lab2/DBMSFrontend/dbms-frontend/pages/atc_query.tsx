@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useAppSelector, useAppDispatch } from "@/store/hooks";
 import {
     selectAtcs,
@@ -13,32 +13,14 @@ import type { ColumnsType } from "antd/es/table";
 import { stringCompare } from "@/modules/cmp";
 import Head from "next/head";
 import type { SingleAtc } from "@/modules/types";
-
-const columns: ColumnsType<SingleAtc> = [
-    {
-        title: "管制员职工号",
-        dataIndex: "id",
-        showSorterTooltip: false,
-        sorter: (a, b) => a.id - b.id
-    },
-    {
-        title: "管制员姓名",
-        dataIndex: "name",
-        showSorterTooltip: false,
-        sorter: (a, b) => stringCompare(a.name, b.name)
-    },
-    {
-        title: "所在机场ICAO",
-        dataIndex: "airportIcao",
-        showSorterTooltip: false,
-        sorter: (a, b) => stringCompare(a.airportIcao, b.airportIcao)
-    }
-];
+import { LocaleContext } from "@/locales/locales";
 
 const AtcQueryPage: React.FC = () => {
     useEffect(() => {
         dispatch(clearAtcs());
     }, []);
+
+    const locale = useContext(LocaleContext);
 
     const dispatch = useAppDispatch();
 
@@ -47,16 +29,37 @@ const AtcQueryPage: React.FC = () => {
 
     const [flightNumber, setFlightNumber] = useState("");
 
+    const columns: ColumnsType<SingleAtc> = [
+        {
+            title: locale.ATC_ID,
+            dataIndex: "id",
+            showSorterTooltip: false,
+            sorter: (a, b) => a.id - b.id
+        },
+        {
+            title: locale.ATC_NAME,
+            dataIndex: "name",
+            showSorterTooltip: false,
+            sorter: (a, b) => stringCompare(a.name, b.name)
+        },
+        {
+            title: locale.ATC_AIRPORT_ICAO,
+            dataIndex: "airportIcao",
+            showSorterTooltip: false,
+            sorter: (a, b) => stringCompare(a.airportIcao, b.airportIcao)
+        }
+    ];
+
     return (
         <>
             <Head>
-                <title>HIT民航信息监控系统 - 管制员查询</title>
+                <title>{locale.APP_TITLE + " - " + locale.ATCS_TITLE}</title>
             </Head>
             <Spin spinning={isAtcLoading}>
                 <div className={stylesCommon.divContentWrapper}>
                     <Space size={20} style={{ marginBottom: 20 }}>
                         <Input
-                            placeholder="请输入航班号"
+                            placeholder={locale.ENTER + locale.FLIGHT_NBR}
                             onChange={e =>
                                 setFlightNumber(e.currentTarget.value)
                             }
@@ -73,7 +76,7 @@ const AtcQueryPage: React.FC = () => {
                                     )
                                 )
                             }>
-                            查询
+                            {locale.QUERY}
                         </Button>
                     </Space>
 
